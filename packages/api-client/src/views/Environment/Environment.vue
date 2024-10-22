@@ -16,7 +16,7 @@ import {
 } from '@scalar/components'
 import { environmentSchema } from '@scalar/oas-utils/entities/environment'
 import { nanoid } from 'nanoid'
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import EnvironmentColorModal from './EnvironmentColorModal.vue'
@@ -29,8 +29,6 @@ const colorModal = useModal()
 const environmentModal = useModal()
 
 const activeEnvironmentID = ref<string | null>(null)
-const nameInputRef = ref<HTMLInputElement | null>(null)
-const isEditingName = ref(false)
 const showTable = ref(false)
 const colorModalEnvironment = ref<string | null>(null)
 const selectedColor = ref('')
@@ -106,19 +104,6 @@ const setActiveEnvironment = () => {
   const routeEnvironmentId = router.currentRoute.value.params.environment
   if (routeEnvironmentId === 'default') {
     activeEnvironmentID.value = environments.default.uid
-  }
-}
-
-/** display a focused input to edit environment name */
-const enableNameEditing = () => {
-  if (
-    activeEnvironmentID.value &&
-    !environments[activeEnvironmentID.value].isDefault
-  ) {
-    isEditingName.value = true
-    nextTick(() => {
-      nameInputRef.value?.focus()
-    })
   }
 }
 
@@ -299,21 +284,24 @@ watch(
         <template
           v-if="activeEnvironmentID"
           #title>
-          <span
-            v-if="!isEditingName || environments[activeEnvironmentID].isDefault"
-            @dblclick="enableNameEditing">
-            {{ environments[activeEnvironmentID].name }}
-          </span>
-          <input
-            v-else
-            ref="nameInputRef"
-            class="ring-1 ring-offset-4 ring-b-outline rounded"
-            spellcheck="false"
-            type="text"
-            :value="environments[activeEnvironmentID].name"
-            @blur="isEditingName = false"
-            @input="updateEnvironmentName"
-            @keyup.enter="isEditingName = false" />
+          <div class="flex-1 flex gap-1 items-center relative">
+            <label
+              v-if="!environments[activeEnvironmentID].isDefault"
+              class="absolute w-full h-full top-0 left-0 pointer-events-auto opacity-0 cursor-text"
+              for="environmentname"></label>
+            <input
+              v-if="!environments[activeEnvironmentID].isDefault"
+              id="environmentname"
+              class="outline-none border-0 text-c-1 rounded pointer-events-auto relative w-full"
+              placeholder="Environment Name"
+              :value="environments[activeEnvironmentID].name"
+              @input="updateEnvironmentName" />
+            <span
+              v-else
+              class="text-c-1">
+              {{ environments[activeEnvironmentID].name }}
+            </span>
+          </div>
           <div class="ml-auto">
             <ScalarTooltip
               align="center"
