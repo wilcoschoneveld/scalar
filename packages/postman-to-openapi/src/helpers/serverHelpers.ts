@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 
-import type { PostmanCollection } from '../postman'
+import type { PostmanCollection } from '../types'
 import { getDomainFromUrl } from './urlHelpers'
 
 /**

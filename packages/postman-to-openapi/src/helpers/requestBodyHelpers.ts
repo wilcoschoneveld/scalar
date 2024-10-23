@@ -1,10 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 
-import type {
-  FormParameter,
-  RequestBody,
-  UrlEncodedParameter,
-} from '../postman'
+import type { FormParameter, RequestBody, UrlEncodedParameter } from '../types'
 
 /**
  * Extracts and converts the request body from a Postman request to an OpenAPI RequestBodyObject.

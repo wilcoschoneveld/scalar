@@ -119,6 +119,17 @@ export type AuthAttribute = {
   key: string
   value?: string | number | boolean
   type?: string
+  in?: string
+  description?: string
+  // New fields
+  token?: {
+    type?: string
+  }
+  grant_type?: string
+  authorization_url?: string
+  access_token_url?: string
+  scope?: string[]
+  clientSecret?: string
 }
 
 export type Request =

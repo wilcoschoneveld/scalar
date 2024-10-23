@@ -1,7 +1,7 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 
-import type { Item, ItemGroup } from '../postman'
-import { processAuth } from './authHelpers'
+import type { Item, ItemGroup } from '../types'
+import { processSecurityRequirements } from './authHelpers'
 import { extractParameters } from './parameterHelpers'
 import { extractRequestBody } from './requestBodyHelpers'
 import { extractResponses } from './responseHelpers'
@@ -83,7 +83,11 @@ export function processItem(
     if (!operationObject.security) {
       operationObject.security = []
     }
-    processAuth(request.auth, openapi, operationObject.security)
+    const security = processSecurityRequirements(
+      request.auth,
+      operationObject.security,
+    )
+    operationObject.security = [...operationObject.security, ...security]
   }
 
   if (

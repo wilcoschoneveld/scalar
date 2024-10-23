@@ -1,47 +1,45 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 
-import { processAuth } from './helpers/authHelpers'
+import {
+  processSecurityRequirements,
+  processSecuritySchemes,
+} from './helpers/authHelpers'
 import { processItem } from './helpers/itemHelpers'
 import { parseServers } from './helpers/serverHelpers'
-import type { PostmanCollection } from './postman'
+import type { PostmanCollection } from './types'
 
 /**
  * Converts a Postman Collection to an OpenAPI 3.0.0 document.
  * This function processes the collection's information, servers, authentication,
  * and items to create a corresponding OpenAPI structure.
  */
-export function convert(
-  postmanCollection: PostmanCollection,
-): OpenAPIV3.Document {
+export function convert(collection: PostmanCollection): OpenAPIV3.Document {
   const openapi: OpenAPIV3.Document = {
     openapi: '3.0.0',
     info: {
-      title: postmanCollection.info.name || 'API',
-      version:
-        (postmanCollection.variable?.find((v) => v.key === 'version')
-          ?.value as string) || '1.0.0',
+      title: collection.info.name,
       description:
-        typeof postmanCollection.info.description === 'string'
-          ? postmanCollection.info.description
-          : postmanCollection.info.description?.content || '',
+        typeof collection.info.description === 'string'
+          ? collection.info.description
+          : collection.info.description?.content || '',
+      version: '1.0.0',
     },
-    servers: parseServers(postmanCollection),
+    servers: parseServers(collection),
     paths: {},
   }
 
-  if (postmanCollection.auth) {
-    processAuth(postmanCollection.auth, openapi)
+  if (collection.auth) {
+    console.log('collection.auth', collection.auth)
+    openapi.components = {
+      securitySchemes: processSecuritySchemes(collection.auth),
+    }
+    openapi.security = processSecurityRequirements(collection.auth)
   }
 
-  if (postmanCollection.item && Array.isArray(postmanCollection.item)) {
-    postmanCollection.item.forEach((item) => {
+  if (collection.item && Array.isArray(collection.item)) {
+    collection.item.forEach((item) => {
       processItem(item, openapi, [], '')
     })
-  }
-
-  // Remove empty components
-  if (openapi.components && Object.keys(openapi.components).length === 0) {
-    delete openapi.components
   }
 
   // Remove empty parameters arrays and handle empty request bodies

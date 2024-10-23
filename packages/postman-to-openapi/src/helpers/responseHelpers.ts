@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 
-import type { HeaderList, Response } from '../postman'
+import type { HeaderList, Response } from '../types'
 
 /**
  * Extracts and converts Postman response objects to OpenAPI response objects.

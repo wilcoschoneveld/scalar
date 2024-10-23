@@ -1,6 +1,6 @@
 import type { OpenAPIV3 } from '@scalar/openapi-types'
 
-import type { Header, Request } from '../postman'
+import type { Header, Request } from '../types'
 
 /**
  * Extracts parameters from a Postman request and converts them to OpenAPI parameter objects.
