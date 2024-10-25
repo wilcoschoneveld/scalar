@@ -49,6 +49,7 @@
 
   --scalar-text-decoration: none;
   --scalar-text-decoration-hover: underline;
+  --scalar-selection-background: rgb(177, 212, 252);
 }
 .dark-mode {
   color-scheme: dark;
@@ -107,7 +108,7 @@
   }
 }
 /* High contrast custom selection */
-/* *::selection {
+*::selection {
   background: var(--scalar-selection-background);
   color: var(--scalar-selection-color);
-} */
+}
