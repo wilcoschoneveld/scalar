@@ -83,6 +83,11 @@ body {
   overscroll-behavior: none;
 }
 
+body {
+  cursor: default;
+  user-select: none;
+}
+
 #scalar-client {
   display: flex;
   flex-direction: column;
