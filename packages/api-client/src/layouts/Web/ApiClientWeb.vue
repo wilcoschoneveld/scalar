@@ -8,7 +8,13 @@ import { useWorkspace } from '@/store'
 import { addScalarClassesToHeadless } from '@scalar/components'
 import { getThemeStyles } from '@scalar/themes'
 import { ScalarToasts } from '@scalar/use-toasts'
-import { computed, onBeforeMount, onBeforeUnmount, onMounted } from 'vue'
+import {
+  computed,
+  onBeforeMount,
+  onBeforeUnmount,
+  onMounted,
+  provide,
+} from 'vue'
 import { RouterView } from 'vue-router'
 
 // Initialize dark mode state globally
@@ -16,6 +22,9 @@ useDarkModeState()
 
 const workspaceStore = useWorkspace()
 const { events } = workspaceStore
+
+// Provide the isDesktop value
+provide('isDesktop', false)
 
 // Ensure we add our scalar wrapper class to the headless ui root
 onBeforeMount(() => addScalarClassesToHeadless())
@@ -60,9 +69,7 @@ const themeStyleTag = computed(
   <MainLayout v-if="workspaceStore.activeWorkspace.value?.uid">
     <RouterView v-slot="{ Component }">
       <keep-alive>
-        <component
-          :is="Component"
-          isApp="false" />
+        <component :is="Component" />
       </keep-alive>
     </RouterView>
   </MainLayout>
